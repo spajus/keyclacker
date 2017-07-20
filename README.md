@@ -57,13 +57,8 @@ You can pass the volume value for the program (default volume is 1, which is
 pretty quiet).
 
 ```bash
-# Clear the logfile.
-$ keylogger clear
-Logfile cleared.
-
-# Specify a logfile location.
-$ keylogger ~/logfile.txt
-Logging to: /Users/Casey/logfile.txt
+# Be very loud
+$ keyclacker 10
 ```
 
 ## TODO / Known Issues / Bugs
