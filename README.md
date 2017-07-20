@@ -1,23 +1,33 @@
-# Mac OS X Keylogger
+# Mechanical Cherry MX blue keyboard emulator for Mac OS X
 
-This repository holds the code for a simple and easy to use keylogger for Mac OS X. It is not meant to be malicious, and is written as a proof of concept. There is not a lot of information on keyloggers or implementing them on Mac OS X, and most of the ones I've seen do not work as indicated. This project aims to be a simple implementation on how it can be accomplished on OS X.
+`keyclacker` is a daemon that plays sounds of mechanical keyboard when you
+press keys on your Mac keyboard. For those occasions when you cannot bring your
+mechanical friend with you.
 
-> Note: This keylogger is currently unable to capture secure input such as passwords. See issue #3 for more information.
+See [this tweet](https://twitter.com/TheRealSpajus/status/888009860788473856)
+for a demo video.
+
+Code is forked from and based on this keylogger:
+[caseyscarborough/keylogger](https://github.com/caseyscarborough/keylogger)
+
+All key logging functionality was removed, your keystrokes are not being
+recorded.
 
 ## Usage
 
-Start by cloning the repository and running the proper make commands, shown below. By default, the application installs to `/usr/local/bin/keylogger`, which can easily be changed in the [`Makefile`](https://github.com/caseyscarborough/keylogger/blob/master/Makefile). `make install` may require root access.
+Start by cloning the repository and running the proper make commands, shown
+below. By default, the application installs to `/usr/local/bin/keyclacker`,
+which can easily be changed in the
+[`Makefile`](https://github.com/spajus/keyclacker/blob/master/Makefile).
+`make install` requires root access.
 
 ```bash
-$ git clone https://github.com/caseyscarborough/keylogger && cd keylogger
-$ make && make install
+$ git clone https://github.com/spajus/keyclacker && cd keyclacker
+$ make && sudo make install
 ```
 
-The application by default logs to `/var/log/keystroke.log`, which may require root access depending on your system's permissions. You can change this in [`keylogger.h`](https://github.com/caseyscarborough/keylogger/blob/master/keylogger.h#L12) if necessary.
-
 ```bash
-$ keylogger
-Logging to: /var/log/keystroke.log
+$ sudo keyclacker
 ```
 
 If you'd like the application to run on startup, run the `startup` make target:
@@ -36,7 +46,8 @@ $ sudo make uninstall
 
 ### Optional Parameters
 
-You can pass in two optional parameters to the program. The `clear` option will clear the logs at the default location. Any other argument passed in will be used as the path to the log file for that process. See below:
+You can pass the volume value for the program (default volume is 1, which is
+pretty quiet)
 
 ```bash
 # Clear the logfile.

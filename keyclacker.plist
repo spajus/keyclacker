@@ -3,10 +3,12 @@
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>keylogger</string>
+  <string>keyclacker</string>
   <key>ProgramArguments</key>
   <array>
-      <string>/usr/local/bin/keylogger</string>
+      <string>/usr/local/bin/keyclacker</string>
+      <!-- volume -->
+      <string>1</string>
   </array>
   <key>RunAtLoad</key>
   <true/>
