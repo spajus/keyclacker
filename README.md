@@ -15,6 +15,10 @@ Code is forked from and based on this keylogger:
 All key logging functionality was removed, your keystrokes are not being
 recorded.
 
+## Alternatives
+
+- [millerjs/modelm](https://github.com/millerjs/modelm)
+
 ## Usage
 
 Start by cloning the repository and running the proper make commands, shown
@@ -67,6 +71,8 @@ Logging to: /Users/Casey/logfile.txt
 - It's using system call to afplay to play sounds. CoreAudio or OpenAL should
   be used instead for much better performance.
 - Repeating keys produced by a long key press should not produce any sound.
+- Modifier keys don't produce correct sounds when pressed in bulk.
+- Add more variety and stereo range.
 
 ## Contributing
 
