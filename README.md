@@ -45,7 +45,7 @@ $ sudo make startup
 ## Uninstallation
 
 You can completely remove the application from your system (including the
-startup daemon) by running the following command (logs will not be deleted):
+startup daemon) by running the following command:
 
 ```bash
 $ sudo make uninstall
