@@ -4,6 +4,8 @@
 press keys on your Mac keyboard. For those occasions when you cannot bring your
 mechanical friend with you.
 
+*WARNING* - it is a quick crude implementation, use at your own risk.
+
 See [this tweet](https://twitter.com/TheRealSpajus/status/888009860788473856)
 for a demo video.
 
@@ -47,7 +49,7 @@ $ sudo make uninstall
 ### Optional Parameters
 
 You can pass the volume value for the program (default volume is 1, which is
-pretty quiet)
+pretty quiet).
 
 ```bash
 # Clear the logfile.
@@ -58,6 +60,12 @@ Logfile cleared.
 $ keylogger ~/logfile.txt
 Logging to: /Users/Casey/logfile.txt
 ```
+
+## TODO / Known Issues / Bugs
+
+- It's using system call to afplay to play sounds. CoreAudio or OpenAL should
+  be used instead for much better performance.
+- Repeating keys produced by a long key press should not produce any sound.
 
 ## Contributing
 
