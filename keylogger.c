@@ -2,8 +2,12 @@
 
 int main(int argc, const char *argv[]) {
 
+  if (argc == 2) {
+    volume = (int) strtol(argv[1], (char **) NULL,  10);
+  }
+
     // Create an event tap to retrieve keypresses.
-    CGEventMask eventMask = (CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventFlagsChanged));
+    CGEventMask eventMask = (CGEventMaskBit(kCGEventKeyUp) | CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventFlagsChanged));
     CFMachPortRef eventTap = CGEventTapCreate(
         kCGSessionEventTap, kCGHeadInsertEventTap, 0, eventMask, CGEventCallback, NULL
     );
@@ -19,35 +23,6 @@ int main(int argc, const char *argv[]) {
     CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, kCFRunLoopCommonModes);
     CGEventTapEnable(eventTap, true);
 
-
-    // Clear the logfile if clear argument used or log to specific file if given.
-    if(argc == 2) {
-        if(strcmp(argv[1], "clear") == 0) {
-            fopen(logfileLocation, "w");
-            printf("%s cleared.\n", logfileLocation);
-            fflush(stdout);
-            exit(1);
-        } else {
-            logfileLocation = argv[1];
-        }
-    }
-
-    // Get the current time and open the logfile.
-    time_t result = time(NULL);
-    logfile = fopen(logfileLocation, "a");
-
-    if (!logfile) {
-        fprintf(stderr, "ERROR: Unable to open log file. Ensure that you have the proper permissions.\n");
-        exit(1);
-    }
-
-    // Output to logfile.
-    fprintf(logfile, "\n\nKeylogging has begun.\n%s\n", asctime(localtime(&result)));
-    fflush(logfile);
-
-    // Display the location of the logfile and start the loop.
-    printf("Logging to: %s\n", logfileLocation);
-    fflush(stdout);
     CFRunLoopRun();
 
     return 0;
@@ -56,13 +31,56 @@ int main(int argc, const char *argv[]) {
 // The following callback method is invoked on every keypress.
 CGEventRef CGEventCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon) {
     if (type != kCGEventKeyDown && type != kCGEventFlagsChanged && type != kCGEventKeyUp) { return event; }
-
     // Retrieve the incoming keycode.
     CGKeyCode keyCode = (CGKeyCode) CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
+    char command[1024];
+    char *direction = NULL;
+    char sound[24];
 
-    // Print the human readable key to the logfile.
-    fprintf(logfile, "%s", convertKeyCode(keyCode));
-    fflush(logfile);
+    switch (keyCode) {
+      case 36:
+        strcpy(sound, "enter");
+        break;
+      case 49:
+        strcpy(sound, "space");
+        break;
+      default:
+        snprintf(sound, sizeof(sound), "%i", rand_interval(0, 4));
+    }
+
+    // Handle modifier key presses
+    if (type == kCGEventFlagsChanged) {
+      strcpy(sound, "shift");
+      CGEventFlags flags = CGEventGetFlags(event);
+      // Not ideal, but simple solution, if any of flags is on, then we assume
+      // that it's pressed, if not, we assume it's being released. Works with 1
+      // modifier key at a time.
+      // TODO: remember modifiers and play sounds according to actual situation
+      if (flags & kCGEventFlagMaskShift ||
+          flags & kCGEventFlagMaskControl ||
+          flags & kCGEventFlagMaskAlternate ||
+          flags & kCGEventFlagMaskSecondaryFn ||
+          flags & kCGEventFlagMaskNumericPad ||
+          flags & kCGEventFlagMaskCommand) {
+        direction = "down";
+      } else {
+        direction = "up";
+      }
+    }
+
+    // Regular key presses
+    if (type == kCGEventKeyDown) {
+      direction = "down";
+    }
+    if (type == kCGEventKeyUp) {
+      direction = "up";
+    }
+
+    if (direction) {
+      snprintf(command, sizeof(command), "afplay -v %i sounds/key_%s_%s.aif &",
+          volume, sound, direction);
+      system(command);
+    }
 
     return event;
 }
@@ -186,4 +204,22 @@ const char *convertKeyCode(int keyCode) {
         case 126: return "[up]";
     }
     return "[unknown]";
+}
+
+unsigned int rand_interval(unsigned int min, unsigned int max)
+{
+    int r;
+    const unsigned int range = 1 + max - min;
+    const unsigned int buckets = RAND_MAX / range;
+    const unsigned int limit = buckets * range;
+
+    /* Create equal size buckets all in a row, then fire randomly towards
+     * the buckets until you land in one of them. All buckets are equally
+     * likely. If you land off the end of the line of buckets, try again. */
+    do
+    {
+        r = rand();
+    } while (r >= limit);
+
+    return min + (r / buckets);
 }

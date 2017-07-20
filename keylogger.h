@@ -8,10 +8,11 @@
 #include <Carbon/Carbon.h>
 // https://developer.apple.com/library/mac/documentation/Carbon/Reference/QuartzEventServicesRef/Reference/reference.html
 
-FILE *logfile = NULL;
-const char *logfileLocation = "/var/log/keystroke.log";
-
 CGEventRef CGEventCallback(CGEventTapProxy, CGEventType, CGEventRef, void*);
 const char *convertKeyCode(int);
+
+int volume = 4;
+
+unsigned int rand_interval(unsigned int min, unsigned int max);
 
 #endif
