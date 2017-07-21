@@ -7,7 +7,7 @@ int main(int argc, const char *argv[]) {
   }
 
   // Test if sounds are available locally (which means daemon is not installed)
-  if (access("./sounds/key_0_down.aif", F_OK) != -1) {
+  if (access("./sounds/key_0_down.wav", F_OK) != -1) {
     strcpy(sounds_path, "./sounds");
   } else {
     strcpy(sounds_path, "/usr/local/keyclacker");
@@ -103,7 +103,7 @@ CGEventRef CGEventCallback(CGEventTapProxy proxy, CGEventType type,
   if (direction) {
     // And here's the point where everyone gets disappointed
     // TODO: proper reimplementation without shelling out
-    snprintf(command, sizeof(command), "afplay -v %i %s/key_%s_%s.aif &",
+    snprintf(command, sizeof(command), "afplay -v %i %s/key_%s_%s.wav &",
         volume, sounds_path, sound, direction);
     system(command);
   }

@@ -17,12 +17,12 @@ install:
 	cp -r $(DATADIR) $(INSTALLDATADIR)
 
 uninstall:
-	rm $(INSTALLDIR)/$(EXECUTABLE)
-	rm /Library/LaunchDaemons/$(PLIST)
+	rm -f $(INSTALLDIR)/$(EXECUTABLE)
+	rm -f /Library/LaunchDaemons/$(PLIST)
+	rm -r $(INSTALLDATADIR)
 
 startup:
 	cp $(PLIST) /Library/LaunchDaemons
 
 clean:
 	rm $(EXECUTABLE)
-	rm -r $(INSTALLDATADIR)
